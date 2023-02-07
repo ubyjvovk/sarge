@@ -5,7 +5,7 @@
 
     let text,ut;
 
-    const checkEvery = 60 * 1 * 1000;
+    const checkEvery = 20 * 1 * 1000;
     let meanYellInterval;
     let lastYell;
     let startTime;
@@ -45,7 +45,7 @@
         text = "If you're not being productive right now, do 20 pushups";
         ut = new SpeechSynthesisUtterance(text);
     
-        meanYellInterval = 15 * 60; // yell every 20 seconds, on average
+        meanYellInterval = 15 * 60; // yell every 15 minutes, on average
         lastYell = Date.now(); 
         startTime = Date.now();
         yellCount = 0;
