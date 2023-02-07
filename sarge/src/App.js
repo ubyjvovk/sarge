@@ -1,21 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
+  
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [interval, setInterval] = useState(5);
-  const [selectedVoice, setSelectedVoice] = useState('default');
+  const [interval, setNotifInterval] = useState(
+    parseInt(localStorage.getItem('interval')) || 5
+  );
+  const [selectedVoice, setSelectedVoice] = useState(
+    localStorage.getItem('selectedVoice') || 'default'
+  );
+  const [message, setMessage] = useState(
+    localStorage.getItem('message') || 'Hey keep working'
+  );
+
+  useEffect(() => {
+    localStorage.setItem('interval', interval);
+    localStorage.setItem('selectedVoice', selectedVoice);
+    localStorage.setItem('message', message);
+  }, [interval, selectedVoice, message]);
+
+  useEffect(() => {
+    let intervalId = null;
+
+    if (isSwitchOn) {
+      intervalId = setInterval(() => {
+        console.log("")
+        const msg = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(msg);
+      }, interval * 1 * 1000);
+    } else {
+      clearInterval(intervalId);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isSwitchOn, interval, message]);
+
 
   const handleSwitchChange = () => {
     setIsSwitchOn(!isSwitchOn);
   };
 
   const handleIntervalChange = (event) => {
-    setInterval(event.target.value);
+    setNotifInterval(event.target.value);
   };
 
   const handleVoiceChange = (event) => {
     setSelectedVoice(event.target.value);
+  };
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
   };
 
   return (
@@ -47,6 +84,17 @@ const App = () => {
             <span>{interval}</span>
           </div>
         </div>
+      </div>
+
+      <div className="form-group">
+      <label htmlFor="messageInput">Voice Message</label>
+      <input
+        type="text"
+        className="form-control"
+        id="messageInput"
+        value={message}
+        onChange={handleMessageChange}
+        />
       </div>
 
       <div className="row">
