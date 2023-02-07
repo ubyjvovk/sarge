@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -18,34 +19,47 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div>
-        <label htmlFor="switch">Turn On/Off:</label>
-        <button id="switch" onClick={handleSwitchChange}>
-          {isSwitchOn ? 'Turn Off' : 'Turn On'}
-        </button>
+    <div className="container">
+      <div className="row">
+        <div className="col-sm-12">
+          <div className="form-group">
+            <label htmlFor="switch">Turn On/Off:</label>
+            <button id="switch" className="btn btn-primary" onClick={handleSwitchChange}>
+              {isSwitchOn ? 'Turn Off' : 'Turn On'}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="interval">Notification Interval (minutes):</label>
-        <input
-          type="range"
-          id="interval"
-          min={5}
-          max={30}
-          value={interval}
-          onChange={handleIntervalChange}
-        />
-        <span>{interval}</span>
+      <div className="row">
+        <div className="col-sm-12">
+          <div className="form-group">
+            <label htmlFor="interval">Notification Interval (minutes):</label>
+            <input
+              type="range"
+              id="interval"
+              min={5}
+              max={30}
+              value={interval}
+              onChange={handleIntervalChange}
+              className="form-control-range"
+            />
+            <span>{interval}</span>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="voice">Voice:</label>
-        <select id="voice" value={selectedVoice} onChange={handleVoiceChange}>
-          <option value="default">Default</option>
-          <option value="voice1">Voice 1</option>
-          <option value="voice2">Voice 2</option>
-        </select>
+      <div className="row">
+        <div className="col-sm-12">
+          <div className="form-group">
+            <label htmlFor="voice">Voice:</label>
+            <select id="voice" className="form-control" value={selectedVoice} onChange={handleVoiceChange}>
+              <option value="default">Default</option>
+              <option value="voice1">Voice 1</option>
+              <option value="voice2">Voice 2</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   );
