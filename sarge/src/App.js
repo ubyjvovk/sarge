@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Tabs, Tab } from 'react-bootstrap';
+import { Tab} from 'react-bootstrap';
 
 const App = () => {
 
+  const [activeTab, setActiveTab] = useState('hero');
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [interval, setNotifInterval] = useState(
     parseInt(localStorage.getItem('interval')) || 5
@@ -23,7 +24,7 @@ const App = () => {
     console.log("will wait for voices to load");
     setTimeout(() => {
       setVoices(window.speechSynthesis.getVoices());
-    }, 25);
+    }, 100);
   }
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const App = () => {
     localStorage.setItem('selectedVoice', selectedVoice);
     localStorage.setItem('message', message);
   }, [interval, selectedVoice, message]);
+
 
   const shout = useCallback((e) => {
     if (e) e.preventDefault();
@@ -59,6 +61,9 @@ const App = () => {
     };
   }, [isSwitchOn, interval, yellCount, message, selectedVoice, voices, shout]); // no need to depend on message and voice, shout deps on them
 
+  const switchTabs = () => {
+    setActiveTab(activeTab === 'hero' ? 'settings' : 'hero');
+  }
 
   const handleSwitchChange = () => {
     setIsSwitchOn(!isSwitchOn);
@@ -77,128 +82,113 @@ const App = () => {
   };
   return (
     <div className="container-sm mt-5">
-      <Tabs defaultActiveKey="main" id="uncontrolled-tab-example">
+      <Tab.Container id="left-tabs-example" defaultActiveKey="first" activeKey={activeTab}>
+        <Tab.Content>
+          <Tab.Pane eventKey="hero" title='hero'>
+            <div class="container my-5">
+              <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                  <h1 class="display-4 fw-bold lh-1 mb-5">Your Personal Drill Sergeant</h1>
+                  <p class='lead'> Sarge will keep you fit and productive</p>
+                  <p class='lead'>
+                    He will check on you periodically (at random, around the interval you set), and if you're not working, you must pay the price.
+                  </p>
+
+                  <p class='lead'>
+                    In other words, this is a programmable notification timer that reminds you to stay focused and on track.
+                  </p>
+
+                  <p class='lead mb-5 fw'>
+                    {isSwitchOn ? `The heat is on! Will yell every ${interval} minutes on average, ${yellCount} yells so far` : "Sarge is asleep"}
+                  </p>
+
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
 
 
-
-        <Tab eventKey="main" title="Drill Sergeant">
-          <h2 className="text-center mt-5">Drill Sergeant</h2>
-          <p className="mt-3">
-            This is a programmable notification timer that reminds you to stay focused and on track while working.
-          </p>
-          <p className="mt-3">
-            Sarge will yell at you periodically (at random, around the interval you set), and you will obey.
-          </p>
-          <p>
-            {isSwitchOn ? `The heat is on! Will yell every ${interval} minutes on average, ${yellCount} yells so far` : "Sarge is asleep"}
-          </p>
-          <div className="d-flex justify-content-center mt-5">
-            <button
-              className={`btn btn-${isSwitchOn ? "danger" : "success"} btn-lg`}
-              onClick={handleSwitchChange}
-            >
-              {isSwitchOn ? "Turn Off" : "Turn On"}
-            </button>
-          </div>
-        </Tab>
-
-        <Tab eventKey="hero" title='hero'>
-          <div class="container my-5">
-            <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-              <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
-                <h1 class="display-4 fw-bold lh-1 mb-5">Your Personal Drill Sergeant</h1>
-                <p class='lead'> Sarge will keep you fit and productive</p>
-                <p class='lead'>
-                  He will check on you periodically (at random, around the interval you set), and if you're not working, you must pay the price.
-                </p>
-                
-                <p class='lead'>
-                In other words, this is a programmable notification timer that reminds you to stay focused and on track.
-                </p>
-
-
-                <p class='lead mb-5 fw'>
-                  Sarge is asleep.
-                </p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                  
-                  
-                  <button type="button" 
+                    <button type="button"
                       className={`btn btn-lg px-4 me-md-2 fw-bold btn-${isSwitchOn ? "danger" : "success"} btn-lg`}
                       onClick={handleSwitchChange}
-                  >
-                    {isSwitchOn ? "Turn Off" : "Turn On"}
-                  </button>
-                  
-                  
-                  <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+                    >
+                      {isSwitchOn ? "Turn Off" : "Turn On"}
+                    </button>
+
+
+                    <button type="button" class="btn btn-outline-secondary btn-lg px-4" onClick={switchTabs}>Settings</button>
+                  </div>
+                </div>
+                <div class="col-lg-5 offset-lg-2 p-0 overflow-hidden shadow-lg">
+                  <img class="rounded-lg-3" src="/sarge/sarge2.png" alt="" width='512' />
                 </div>
               </div>
-              <div class="col-lg-5 offset-lg-2 p-0 overflow-hidden shadow-lg">
-                <img class="rounded-lg-3" src="/sarge/sarge2.png" alt="" width='512' />
+            </div>
+          </Tab.Pane>
+
+          <Tab.Pane eventKey="settings" title="Settings">
+            <form className='form-inline'>
+
+              <h2 className="text-center mt-5">Settings</h2>
+
+              <div className="form-group mt-5">
+                <label htmlFor="intervalRange">Interval (minutes): </label>
+                <input
+                  type="range"
+                  className="form-control-range"
+                  id="intervalRange"
+                  min={1}
+                  max={300}
+                  value={interval}
+                  onChange={handleIntervalChange}
+                />
+                {interval}
               </div>
+
+              <div className="form-group">
+                <label htmlFor="voiceSelect">Voice:</label>
+                <select
+                  className="form-control"
+                  id="voiceSelect"
+                  value={selectedVoice}
+                  onChange={handleVoiceChange}
+                >
+                  {voices.map(voice => (
+                    <option key={voice.name} value={voice.name}>
+                      {voice.name} ({voice.lang})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="messageInput">Message:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="messageInput"
+                  value={message}
+                  onChange={handleMessageChange}
+                />
+              </div>
+              <div className="form-group">
+                <button formAction=''
+                  className='btn btn-primary'
+                  onClick={shout}
+                >
+                  Try it
+                </button>
+              </div>
+            </form>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3 mt-3">
+
+              <a class="btn btn-outline-secondary btn-small px-4" onClick={switchTabs}> {'< Back'} </a>
             </div>
-          </div>
-        </Tab>
+
+          </Tab.Pane>
 
 
 
-        <Tab eventKey="settings" title="Settings">
-          <form className='form-inline'>
 
-            <h2 className="text-center mt-5">Settings</h2>
+        </Tab.Content>
+      </Tab.Container>
 
-            <div className="form-group mt-5">
-              <label htmlFor="intervalRange">Interval (minutes): </label>
-              <input
-                type="range"
-                className="form-control-range"
-                id="intervalRange"
-                min={1}
-                max={300}
-                value={interval}
-                onChange={handleIntervalChange}
-              />
-              {interval}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="voiceSelect">Voice:</label>
-              <select
-                className="form-control"
-                id="voiceSelect"
-                value={selectedVoice}
-                onChange={handleVoiceChange}
-              >
-                {voices.map(voice => (
-                  <option key={voice.name} value={voice.name}>
-                    {voice.name} ({voice.lang})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="messageInput">Message:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="messageInput"
-                value={message}
-                onChange={handleMessageChange}
-              />
-            </div>
-            <div className="form-group">
-              <button formAction=''
-                className='btn btn-primary'
-                onClick={shout}
-              >
-                Try it
-              </button>
-            </div>
-          </form>
-
-        </Tab>
-      </Tabs>
     </div>
   );
 };
