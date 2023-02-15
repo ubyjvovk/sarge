@@ -118,7 +118,7 @@ const App = () => {
                 </div>
 
                 <div className="col-lg-5 offset-lg-2 p-0 mb-4 overflow-hidden ">
-                  <img className="rounded mx-auto d-block " src="/sarge/sarge2.png" alt=""  />
+                  <img className="rounded mx-auto d-block " src="/sarge/sarge2.jpg" alt=""  />
                   <p className="text-end small gap-1 ">
                     made by ubyjvovk 
                     <a class="text-end small me-2 ms-1" href="https://github.com/ubyjvovk/sarge"><MarkGithubIcon size={16} /></a>
