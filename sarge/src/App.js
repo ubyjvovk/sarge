@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Tab} from 'react-bootstrap';
+import { Tab } from 'react-bootstrap';
 
 const App = () => {
 
   const [activeTab, setActiveTab] = useState('hero');
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [interval, setNotifInterval] = useState(
-    parseInt(localStorage.getItem('interval')) || 5
+    parseInt(localStorage.getItem('interval')) || 10
   );
   const [selectedVoice, setSelectedVoice] = useState(
     localStorage.getItem('selectedVoice') || 'Daniel'
@@ -47,7 +47,7 @@ const App = () => {
     let intervalId = null;
 
     if (isSwitchOn) {
-      const randomInterval = Math.random() * 2 * interval * 1; // uniformly random with mean == interval
+      const randomInterval = Math.random() * 2 * interval * 60; // uniformly random with mean == interval
       console.log('next yell in ', randomInterval);
       intervalId = setTimeout(() => {
         shout();
@@ -82,24 +82,24 @@ const App = () => {
   };
   return (
     <div className="container-sm mt-5">
-      <Tab.Container id="left-tabs-example" defaultActiveKey="first" activeKey={activeTab}>
+      <Tab.Container id="tab-contrainer" activeKey={activeTab}>
         <Tab.Content>
           <Tab.Pane eventKey="hero" title='hero'>
             <div class="container my-5">
               <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
                 <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
-                  <h1 class="display-4 fw-bold lh-1 mb-5">Your Personal Drill Sergeant</h1>
+                  <h1 class="display-5 fw-bold lh-1 mb-5">Your Personal Drill Sergeant</h1>
                   <p class='lead'> Sarge will keep you fit and productive</p>
                   <p class='lead'>
                     He will check on you periodically (at random, around the interval you set), and if you're not working, you must pay the price.
                   </p>
 
-                  <p class='lead'>
+                  {/* <p class='lead'>
                     In other words, this is a programmable notification timer that reminds you to stay focused and on track.
-                  </p>
+                  </p> */}
 
-                  <p class='lead mb-5 fw'>
-                    {isSwitchOn ? `The heat is on! Will yell every ${interval} minutes on average, ${yellCount} yells so far` : "Sarge is asleep"}
+                  <p class='lead mb-5 fw-bold'>
+                    {isSwitchOn ? `The Sarge will shout every ${interval} minutes on average, ${yellCount} times so far` : "Sarge is asleep"}
                   </p>
 
                   <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
@@ -109,7 +109,7 @@ const App = () => {
                       className={`btn btn-lg px-4 me-md-2 fw-bold btn-${isSwitchOn ? "danger" : "success"} btn-lg`}
                       onClick={handleSwitchChange}
                     >
-                      {isSwitchOn ? "Turn Off" : "Turn On"}
+                      {isSwitchOn ? "Stop" : "Start"}
                     </button>
 
 
@@ -124,61 +124,108 @@ const App = () => {
           </Tab.Pane>
 
           <Tab.Pane eventKey="settings" title="Settings">
-            <form className='form-inline'>
+            <div class="container my-5">
+              <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                <h1 class="display-7 fw-bold lh-1 mb-3">Settings</h1>
 
-              <h2 className="text-center mt-5">Settings</h2>
 
-              <div className="form-group mt-5">
-                <label htmlFor="intervalRange">Interval (minutes): </label>
-                <input
-                  type="range"
-                  className="form-control-range"
-                  id="intervalRange"
-                  min={1}
-                  max={300}
-                  value={interval}
-                  onChange={handleIntervalChange}
-                />
-                {interval}
-              </div>
+                <form className='form'>
+                {/* <div class="row mb-3 mt-3">
 
-              <div className="form-group">
-                <label htmlFor="voiceSelect">Voice:</label>
-                <select
-                  className="form-control"
-                  id="voiceSelect"
-                  value={selectedVoice}
-                  onChange={handleVoiceChange}
-                >
-                  {voices.map(voice => (
-                    <option key={voice.name} value={voice.name}>
-                      {voice.name} ({voice.lang})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="messageInput">Message:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="messageInput"
-                  value={message}
-                  onChange={handleMessageChange}
-                />
-              </div>
-              <div className="form-group">
-                <button formAction=''
-                  className='btn btn-primary'
-                  onClick={shout}
-                >
-                  Try it
-                </button>
-              </div>
-            </form>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3 mt-3">
+  <div class="col-sm-10">
 
-              <a class="btn btn-outline-secondary btn-small px-4" onClick={switchTabs}> {'< Back'} </a>
+
+</div>
+</div> */}
+
+
+<div class="row mb-3 mt-3">
+  <label for="customRange2" class="col-sm-2 col-form-label">Interval: {interval} </label>
+  <div class="col-sm-10">
+
+<input type="range" class="form-range mt-2" min={1} max={300} id="customRange2" value={interval} onChange={handleIntervalChange} aria-describedby="intervalHelp"/>
+<div id="intervalHelp" class="form-text">We'll never share your email with anyone else.</div>
+
+  </div>
+</div>
+
+
+
+
+
+<div class="row mb-3 mt-4">
+  <label for="colFormLabel" class="col-sm-2 col-form-label">Voice</label>
+  <div class="col-sm-10">
+  <select
+                      className="form-control"
+                      id="voiceSelect"
+                      value={selectedVoice}
+                      onChange={handleVoiceChange}
+                    >
+                      {voices.map(voice => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name} ({voice.lang})
+                        </option>
+                      ))}
+                    </select>
+
+
+  </div>
+</div>
+
+                  {/* <div className="form-group mt-5">
+                    <label htmlFor="intervalRange">Interval (minutes): </label>
+                    <input
+                      type="range"
+                      className="form-control-range"
+                      id="intervalRange"
+                      min={1}
+                      max={300}
+                      value={interval}
+                      onChange={handleIntervalChange}
+                    />
+                    {interval}
+                  </div> */}
+
+                  {/* <div className="form-group">
+                    <label htmlFor="voiceSelect">Voice:</label>
+                    <select
+                      className="form-control"
+                      id="voiceSelect"
+                      value={selectedVoice}
+                      onChange={handleVoiceChange}
+                    >
+                      {voices.map(voice => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name} ({voice.lang})
+                        </option>
+                      ))}
+                    </select>
+                  </div> */}
+                  <div className="form-group">
+                    <label htmlFor="messageInput">Message:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="messageInput"
+                      value={message}
+                      onChange={handleMessageChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button formAction=''
+                      className='btn mt-1 btn-primary'
+                      onClick={shout}
+                    >
+                      Try it
+                    </button>
+                  </div>
+                </form>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3 mt-5">
+
+                  <button class="btn btn-outline-secondary btn-small px-4" onClick={switchTabs}> {'< Back'} </button>
+                </div>
+              </div>
             </div>
 
           </Tab.Pane>
