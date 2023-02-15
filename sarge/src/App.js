@@ -12,8 +12,8 @@ const App = () => {
   const [selectedVoice, setSelectedVoice] = useState(
     localStorage.getItem('selectedVoice') || 'Daniel'
   );
-  const [message, setMessage] = useState(
-    localStorage.getItem('message') || 'If you\'re not being productive right now, do 20 pushups!!!'
+  const [messagesText, setMessagesText] = useState(
+    localStorage.getItem('message') || "If you\'re not being productive right now, do 20 pushups!!! \n If you're not working, do 20 lunges!"
   );
   const [yellCount, setYellCount] = useState(0);
   const [voices, setVoices] = useState([]);
@@ -30,17 +30,19 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('interval', interval);
     localStorage.setItem('selectedVoice', selectedVoice);
-    localStorage.setItem('message', message);
-  }, [interval, selectedVoice, message]);
+    localStorage.setItem('message', messagesText);
+  }, [interval, selectedVoice, messagesText]);
 
 
   const shout = useCallback((e) => {
     if (e) e.preventDefault();
-    const utterance = new SpeechSynthesisUtterance(message);
+    const messages = messagesText.trim().split('\n');
+    const actualMessage = messages[(Math.random() * messages.length) | 0]  // |0 converts to int
+    const utterance = new SpeechSynthesisUtterance(actualMessage);
     utterance.voice = voices.find(voice => voice.name === selectedVoice);
-    console.log("Shout:", message);
+    console.log("Shout:", actualMessage);
     window.speechSynthesis.speak(utterance);
-  }, [voices, selectedVoice, message]);
+  }, [voices, selectedVoice, messagesText]);
 
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const App = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isSwitchOn, interval, yellCount, message, selectedVoice, voices, shout]); // no need to depend on message and voice, shout deps on them
+  }, [isSwitchOn, interval, yellCount, messagesText, selectedVoice, voices, shout]); // no need to depend on message and voice, shout deps on them
 
   const switchTabs = () => {
     setActiveTab(activeTab === 'hero' ? 'settings' : 'hero');
@@ -78,8 +80,9 @@ const App = () => {
   };
 
   const handleMessageChange = (event) => {
-    setMessage(event.target.value);
+    setMessagesText(event.target.value);
   };
+
   return (
     <div className="container-sm mt-5">
       <Tab.Container id="tab-contrainer" activeKey={activeTab}>
@@ -127,115 +130,73 @@ const App = () => {
             <div class="container my-5">
               <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
                 <h1 class="display-7 fw-bold lh-1 mb-3">Settings</h1>
-
-
                 <form className='form'>
-                {/* <div class="row mb-3 mt-3">
+                  <div class="row mb-3 mt-3">
+                    <label for="customRange2" class="col-sm-2 col-form-label">Interval:</label>
+                    <div class="col-sm-8">
 
-  <div class="col-sm-10">
+                      <input type="range" class="form-range mt-2" min={1} max={300} id="customRange2"
+                        value={interval} onChange={handleIntervalChange} aria-describedby="intervalHelp" />
+                      {/* <span class="input-group-text" id="basic-addon2">@example.com</span> */}
 
+                      <div id="intervalHelp" class="form-text">Average interval between random checks</div>
 
-</div>
-</div> */}
-
-
-<div class="row mb-3 mt-3">
-  <label for="customRange2" class="col-sm-2 col-form-label">Interval: {interval} </label>
-  <div class="col-sm-10">
-
-<input type="range" class="form-range mt-2" min={1} max={300} id="customRange2" value={interval} onChange={handleIntervalChange} aria-describedby="intervalHelp"/>
-<div id="intervalHelp" class="form-text">We'll never share your email with anyone else.</div>
-
-  </div>
-</div>
-
-
-
-
-
-<div class="row mb-3 mt-4">
-  <label for="colFormLabel" class="col-sm-2 col-form-label">Voice</label>
-  <div class="col-sm-10">
-  <select
-                      className="form-control"
-                      id="voiceSelect"
-                      value={selectedVoice}
-                      onChange={handleVoiceChange}
-                    >
-                      {voices.map(voice => (
-                        <option key={voice.name} value={voice.name}>
-                          {voice.name} ({voice.lang})
-                        </option>
-                      ))}
-                    </select>
-
-
-  </div>
-</div>
-
-                  {/* <div className="form-group mt-5">
-                    <label htmlFor="intervalRange">Interval (minutes): </label>
-                    <input
-                      type="range"
-                      className="form-control-range"
-                      id="intervalRange"
-                      min={1}
-                      max={300}
-                      value={interval}
-                      onChange={handleIntervalChange}
-                    />
-                    {interval}
-                  </div> */}
-
-                  {/* <div className="form-group">
-                    <label htmlFor="voiceSelect">Voice:</label>
-                    <select
-                      className="form-control"
-                      id="voiceSelect"
-                      value={selectedVoice}
-                      onChange={handleVoiceChange}
-                    >
-                      {voices.map(voice => (
-                        <option key={voice.name} value={voice.name}>
-                          {voice.name} ({voice.lang})
-                        </option>
-                      ))}
-                    </select>
-                  </div> */}
-                  <div className="form-group">
-                    <label htmlFor="messageInput">Message:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="messageInput"
-                      value={message}
-                      onChange={handleMessageChange}
-                    />
+                    </div>
+                    <label for="customRange2" class="col-sm-2 col-form-label">{interval} minute(s)</label>
                   </div>
-                  <div className="form-group">
-                    <button formAction=''
-                      className='btn mt-1 btn-primary'
-                      onClick={shout}
-                    >
-                      Try it
-                    </button>
+
+                  <div class="row mb-3 mt-4">
+                    <label for="colFormLabel" class="col-sm-2 col-form-label">Voice</label>
+                    <div class="col-sm-10">
+                      <select
+                        className="form-control"
+                        id="voiceSelect"
+                        value={selectedVoice}
+                        onChange={handleVoiceChange}
+                      >
+                        {voices.map(voice => (
+                          <option key={voice.name} value={voice.name}>
+                            {voice.name} ({voice.lang})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3 mt-4">
+                    <label htmlFor="messageInput" class="col-sm-2 col-form-label">Message:</label>
+                    <div class="col-sm-10">
+                      <textarea
+                        type="textarea"
+                        className="form-control"
+                        id="messageInput"
+                        value={messagesText}
+                        onChange={handleMessageChange}
+                        aria-describedby="messagesHelp"
+                      />
+                      <div id="messagesHelp" class="form-text">One message per line. Randomly chosen for each check.</div>
+
+                      <button formAction=''
+                        className='btn mt-1 btn-primary'
+                        onClick={shout}
+                      >
+                        Try it
+                      </button>
+                    </div>
                   </div>
                 </form>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3 mt-5">
-
-                  <button class="btn btn-outline-secondary btn-small px-4" onClick={switchTabs}> {'< Back'} </button>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-1 mb-lg-3 mt-4">
+                  <button class="btn btn-outline-secondary btn-small px-4" onClick={switchTabs} aria-describedby="backHelp">
+                    {'< Back'}
+                  </button>
                 </div>
+                <div id="backHelp" class="form-text">changes are saved automatically in your local storage</div>
               </div>
             </div>
 
           </Tab.Pane>
-
-
-
-
         </Tab.Content>
       </Tab.Container>
-
     </div>
   );
 };
