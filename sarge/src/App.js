@@ -13,7 +13,7 @@ const App = () => {
     localStorage.getItem('selectedVoice') || 'Daniel'
   );
   const [messagesText, setMessagesText] = useState(
-    localStorage.getItem('message') || "If you\'re not being productive right now, do 20 pushups!!! \n If you're not working, do 20 lunges!"
+    localStorage.getItem('message') || "If you're not being productive right now, do 20 pushups!!!\nIf you're not working, do 20 lunges!"
   );
   const [yellCount, setYellCount] = useState(0);
   const [voices, setVoices] = useState([]);
@@ -153,6 +153,7 @@ const App = () => {
                         id="voiceSelect"
                         value={selectedVoice}
                         onChange={handleVoiceChange}
+                        aria-describedby="voicesHelp"
                       >
                         {voices.map(voice => (
                           <option key={voice.name} value={voice.name}>
@@ -160,6 +161,7 @@ const App = () => {
                           </option>
                         ))}
                       </select>
+                      <div id="voicesHelp" class="form-text">Voices list might be empty in Safari, Sarge will still work</div>
                     </div>
                   </div>
 
