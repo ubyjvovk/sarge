@@ -92,30 +92,24 @@ const App = () => {
               <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
                 <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
                   <h1 class="display-5 fw-bold lh-1 mb-5">Your Personal Drill Sergeant</h1>
-                  <p class='lead'> Sarge will keep you fit and productive</p>
+                  <p class='lead'>Sarge will keep you fit and productive</p>
                   <p class='lead'>
                     He will check on you periodically (at random, around the interval you set), and if you're not working, you must pay the price.
                   </p>
-
                   {/* <p class='lead'>
                     In other words, this is a programmable notification timer that reminds you to stay focused and on track.
                   </p> */}
-
                   <p class='lead mb-5 fw-bold'>
-                    {isSwitchOn ? `The Sarge will shout every ${interval} minutes on average, ${yellCount} times so far` : "Sarge is asleep"}
+                    {isSwitchOn ? `Sarge will shout every ${interval} minutes on average, ${yellCount} times so far` : "Sarge is asleep"}
                   </p>
 
                   <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-
-
                     <button type="button"
                       className={`btn btn-lg px-4 me-md-2 fw-bold btn-${isSwitchOn ? "danger" : "success"} btn-lg`}
                       onClick={handleSwitchChange}
                     >
                       {isSwitchOn ? "Stop" : "Start"}
                     </button>
-
-
                     <button type="button" class="btn btn-outline-secondary btn-lg px-4" onClick={switchTabs}>Settings</button>
                   </div>
                 </div>
@@ -134,13 +128,9 @@ const App = () => {
                   <div class="row mb-3 mt-3">
                     <label for="customRange2" class="col-sm-2 col-form-label">Interval:</label>
                     <div class="col-sm-8">
-
                       <input type="range" class="form-range mt-2" min={1} max={300} id="customRange2"
                         value={interval} onChange={handleIntervalChange} aria-describedby="intervalHelp" />
-                      {/* <span class="input-group-text" id="basic-addon2">@example.com</span> */}
-
                       <div id="intervalHelp" class="form-text">Average interval between random checks</div>
-
                     </div>
                     <label for="customRange2" class="col-sm-2 col-form-label">{interval} minute(s)</label>
                   </div>
@@ -195,7 +185,6 @@ const App = () => {
                 <div id="backHelp" class="form-text">changes are saved automatically in your local storage</div>
               </div>
             </div>
-
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
