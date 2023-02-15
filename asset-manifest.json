@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/sarge/static/css/main.44f8b8b5.css",
-    "main.js": "/sarge/static/js/main.b1c5efda.js",
+    "main.js": "/sarge/static/js/main.36592e3f.js",
     "static/js/787.416abe12.chunk.js": "/sarge/static/js/787.416abe12.chunk.js",
     "index.html": "/sarge/index.html",
     "main.44f8b8b5.css.map": "/sarge/static/css/main.44f8b8b5.css.map",
-    "main.b1c5efda.js.map": "/sarge/static/js/main.b1c5efda.js.map",
+    "main.36592e3f.js.map": "/sarge/static/js/main.36592e3f.js.map",
     "787.416abe12.chunk.js.map": "/sarge/static/js/787.416abe12.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.44f8b8b5.css",
-    "static/js/main.b1c5efda.js"
+    "static/js/main.36592e3f.js"
   ]
 }
